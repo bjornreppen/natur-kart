@@ -2,13 +2,13 @@ import React from "react";
 import { withRouter } from "react-router";
 import { withStyles } from "@material-ui/core";
 import backend from "../backend";
-import Kart from "../Kart";
 import { SettingsContext } from "../SettingsContext";
 import språk from "../språk";
 import VenstreVinduContainer from "../VenstreVinduContainer";
 import bakgrunnskarttema from "./bakgrunnskarttema";
 import TopBar from "../TopBar/TopBar";
 import MobileNavigation from "../components/MobileNavigation";
+import Kart from "../Kart/LeafletTangram";
 
 const styles = {
   rot: {
@@ -46,6 +46,10 @@ class Grunnkart extends React.Component {
       meta: null,
       visKoder: false
     };
+    this.props.history.listen((location, action) => {
+      // Åpne menyen ved navigering
+      this.context.onNavigateToTab("meny");
+    });
   }
 
   handleActualBoundsChange = bounds => {
@@ -194,6 +198,7 @@ class Grunnkart extends React.Component {
   };
 
   render() {
+    const { history } = this.props;
     let erAktivert = false;
     if (this.state.meta)
       erAktivert = !!this.state.aktiveLag[this.state.meta.kode];
@@ -203,7 +208,11 @@ class Grunnkart extends React.Component {
         {context => {
           return (
             <>
-              <TopBar />
+              <TopBar
+                onSelectResult={item => {
+                  history.push("/" + item.url);
+                }}
+              />
               <div>
                 {context.aktivTab === "meny" && (
                   <div className="sidebar">
@@ -240,6 +249,9 @@ class Grunnkart extends React.Component {
                   meta={this.state.meta}
                   onMapBoundsChange={this.handleActualBoundsChange}
                   onMapMove={context.onMapMove}
+                  onClick={latlng => {
+                    history.push(`?lng=${latlng.lng}&lat=${latlng.lat}`);
+                  }}
                 />
               </div>
               <MobileNavigation />
@@ -257,6 +269,8 @@ class Grunnkart extends React.Component {
   handleMouseLeave = kode => {
     this.setState({ opplystKode: "" });
   };
+
+  static contextType = SettingsContext;
 }
 
 export default withStyles(styles)(withRouter(Grunnkart));

@@ -1,3 +1,4 @@
+import { SettingsContext } from "../SettingsContext";
 import {
   Divider,
   IconButton,
@@ -17,7 +18,6 @@ import {
   Waves,
   Panorama
 } from "@material-ui/icons";
-import { PropTypes } from "prop-types";
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import NavigationChevronLeftDouble from "../Grunnkart/NavigationChevronLeftDouble";
@@ -32,102 +32,99 @@ const styles = {
 
 class MainDrawer extends Component {
   render() {
-    const {
-      classes,
-      erÅpen,
-      toggleDrawer,
-      visKoder,
-      sorterPåKode,
-      onUpdateSetting
-    } = this.props;
+    const { classes } = this.props;
     return (
-      <SwipeableDrawer
-        anchor="left"
-        open={erÅpen}
-        onClose={toggleDrawer}
-        onOpen={toggleDrawer}
-      >
-        <List>
-          <ListItem>
-            <ListItemText
-              classes={{ primary: classes.heading }}
-              primary="Natur i Norge"
-            />
-            <ListItemSecondaryAction>
-              <IconButton onClick={toggleDrawer}>
-                <NavigationChevronLeftDouble />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <Divider />
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={toggleDrawer}
-            onKeyDown={toggleDrawer}
+      <SettingsContext.Consumer>
+        {context => (
+          <SwipeableDrawer
+            anchor="left"
+            onClose={context.onToggleHovedmeny}
+            onOpen={context.onToggleHovedmeny}
+            open={context.visHovedmeny}
           >
-            <Divider />
-            <ListSubheader>Hva vil du utforske?</ListSubheader>
-            <ListItem onClick={this.handleClickNatursystem} button>
-              <ListItemIcon>
-                <Panorama />
-              </ListItemIcon>
-              <ListItemText primary="Natursystem" />
-            </ListItem>
-            <ListItem onClick={this.handleClickLandskap} button>
-              <ListItemIcon>
-                <Waves />
-              </ListItemIcon>
-              <ListItemText primary="Landskap" />
-            </ListItem>
-            <Divider />
-            <ListItem onClick={this.handleClickLastNed} button>
-              <ListItemIcon>
-                <CloudDownload />
-              </ListItemIcon>
-              <ListItemText primary="Laste ned data" />
-            </ListItem>
-            <Divider />
-            <Innstillinger
-              visKoder={visKoder}
-              sorterPåKode={sorterPåKode}
-              onUpdateSetting={onUpdateSetting}
-            />
-            <Divider />
-            <ListSubheader>Bidra</ListSubheader>
-            <ListItem onClick={this.handleClickBidra} button>
-              <ListItemIcon>
-                <Comment />
-              </ListItemIcon>
-              <ListItemText primary="Tilbakemeldinger" />
-            </ListItem>
-            <ListItem onClick={this.handleClickSource} button>
-              <ListItemIcon>
-                <GitHub />
-              </ListItemIcon>
-              <ListItemText primary="Kildekode" />
-            </ListItem>
-            <ListItem onClick={this.handleClickLastOpp} button>
-              <ListItemIcon>
-                <CloudUpload />
-              </ListItemIcon>
-              <ListItemText primary="Levere data" />
-            </ListItem>
-            <Divider />
-            <ListSubheader>Driftes av</ListSubheader>
-            <ListItem onClick={this.handleClickLogo} button>
-              <div className={classes.link}>
-                <BildeAvatar
-                  url="Datakilde/Artsdatabanken"
-                  kode="OR-AD"
-                  size="small"
+            <List>
+              <ListItem>
+                <ListItemText
+                  classes={{ primary: classes.heading }}
+                  primary="Natur i Norge"
                 />
+                <ListItemSecondaryAction>
+                  <IconButton onClick={context.onToggleHovedmeny}>
+                    <NavigationChevronLeftDouble />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider />
+              <div
+                tabIndex={0}
+                role="button"
+                onClick={context.onToggleHovedmeny}
+                onKeyDown={context.onToggleHovedmeny}
+              >
+                <Divider />
+                <ListSubheader>Hva vil du utforske?</ListSubheader>
+                <ListItem onClick={this.handleClickNatursystem} button>
+                  <ListItemIcon>
+                    <Panorama />
+                  </ListItemIcon>
+                  <ListItemText primary="Natursystem" />
+                </ListItem>
+                <ListItem onClick={this.handleClickLandskap} button>
+                  <ListItemIcon>
+                    <Waves />
+                  </ListItemIcon>
+                  <ListItemText primary="Landskap" />
+                </ListItem>
+                <Divider />
+                <ListItem onClick={this.handleClickLastNed} button>
+                  <ListItemIcon>
+                    <CloudDownload />
+                  </ListItemIcon>
+                  <ListItemText primary="Laste ned data" />
+                </ListItem>
+                <Divider />
+                <Innstillinger
+                  visKoder={context.visKoder}
+                  sorterPåKode={context.sorterPåKode}
+                  onUpdateSetting={context.onUpdateValue}
+                />
+                <Divider />
+                <ListSubheader>Bidra</ListSubheader>
+                <ListItem onClick={this.handleClickBidra} button>
+                  <ListItemIcon>
+                    <Comment />
+                  </ListItemIcon>
+                  <ListItemText primary="Tilbakemeldinger" />
+                </ListItem>
+                <ListItem onClick={this.handleClickSource} button>
+                  <ListItemIcon>
+                    <GitHub />
+                  </ListItemIcon>
+                  <ListItemText primary="Kildekode" />
+                </ListItem>
+                <ListItem onClick={this.handleClickLastOpp} button>
+                  <ListItemIcon>
+                    <CloudUpload />
+                  </ListItemIcon>
+                  <ListItemText primary="Levere data" />
+                </ListItem>
+                <Divider />
+                <ListSubheader>Driftes av</ListSubheader>
+                <ListItem onClick={this.handleClickLogo} button>
+                  <div className={classes.link}>
+                    <BildeAvatar
+                      url="Datakilde/Artsdatabanken"
+                      kode="OR-AD"
+                      size="small"
+                    />
+                  </div>
+                  <ListItemText primary="Artsdatabanken" />
+                </ListItem>
               </div>
-              <ListItemText primary="Artsdatabanken" />
-            </ListItem>
-          </div>
-        </List>
-      </SwipeableDrawer>
+            </List>
+          </SwipeableDrawer>
+        )}
+      </SettingsContext.Consumer>
     );
   }
   handleClickBidra = () =>
@@ -146,10 +143,9 @@ class MainDrawer extends Component {
   handleClickLandskap = () =>
     this.props.history.push("/Natur_i_Norge/Landskap/");
   handleClickStat = () => this.props.history.push("/Natur_i_Norge/Stats/");
+  navigateInMenu = url => {
+    this.props.history.push(url);
+  };
 }
-
-MainDrawer.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withRouter(withStyles(styles)(MainDrawer));
